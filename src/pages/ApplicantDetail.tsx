@@ -65,7 +65,7 @@ const ApplicantDetail = () => {
                 <div className="flex flex-wrap gap-2 mb-4">
                   <Badge variant="secondary" className="gap-1 text-base px-3 py-1">
                     <GraduationCap className="w-4 h-4" />
-                    Promedio: {applicant.gpa.toFixed(1)}
+                    Promedio: {applicant.gpa}
                   </Badge>
                   <Badge variant="outline" className="gap-1 text-base px-3 py-1">
                     <Briefcase className="w-4 h-4" />
@@ -143,7 +143,12 @@ const ApplicantDetail = () => {
             <CardContent className="space-y-4">
               <div>
                 <h4 className="font-semibold text-sm text-muted-foreground mb-2">Promedio de Notas</h4>
-                <p className="text-2xl font-bold text-primary">{applicant.gpa.toFixed(1)}</p>
+                <p className="text-2xl font-bold text-primary">{applicant.gpa}</p>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-sm text-muted-foreground mb-2">Semestres como Ayudante</h4>
+                <p className="text-2xl font-bold text-primary">{applicant.semestersAsTA}</p>
               </div>
               
               {applicant.relevantCourses.length > 0 && (

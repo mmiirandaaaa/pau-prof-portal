@@ -13,6 +13,7 @@ export interface Applicant {
   email: string;
   phone: string;
   previousTA: string[];
+  semestersAsTA: number;
   relevantCourses: string[];
   distinctions: string[];
   motivationLetter: string;
