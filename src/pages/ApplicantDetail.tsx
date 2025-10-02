@@ -118,16 +118,6 @@ const ApplicantDetail = () => {
             <CheckCircle className="w-5 h-5 mr-2" />
             {status === "selected" ? "Ya Seleccionado" : "Seleccionar como Ayudante"}
           </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={handlePreselect}
-            disabled={status === "selected" || status === "preselected"}
-            className="flex-1 min-w-[200px]"
-          >
-            <Star className="w-5 h-5 mr-2" />
-            {status === "preselected" ? "Ya Preseleccionado" : "Marcar como Preseleccionado"}
-          </Button>
         </div>
 
         {/* Details Grid */}
