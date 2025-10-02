@@ -3,16 +3,14 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getApplicantsBySubject, getSubjectById } from "@/data/mockData";
-import { ArrowLeft, ArrowUpDown, GraduationCap, Briefcase, Filter } from "lucide-react";
+import { ArrowLeft, ArrowUpDown, GraduationCap, Briefcase } from "lucide-react";
 
 const ApplicantsList = () => {
   const { subjectId } = useParams<{ subjectId: string }>();
   const navigate = useNavigate();
-  const [sortBy, setSortBy] = useState<"gpa" | "name">("gpa");
+  const [sortBy, setSortBy] = useState<"gpa" | "name" | "semesters">("gpa");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [filterBySemesters, setFilterBySemesters] = useState<string>("all");
 
   const subject = subjectId ? getSubjectById(subjectId) : null;
   const applicants = subjectId ? getApplicantsBySubject(subjectId) : [];
@@ -28,18 +26,11 @@ const ApplicantsList = () => {
     );
   }
 
-  const filteredApplicants = applicants.filter((applicant) => {
-    if (filterBySemesters === "all") return true;
-    if (filterBySemesters === "0") return applicant.semestersAsTA === 0;
-    if (filterBySemesters === "1") return applicant.semestersAsTA === 1;
-    if (filterBySemesters === "2") return applicant.semestersAsTA === 2;
-    if (filterBySemesters === "3+") return applicant.semestersAsTA >= 3;
-    return true;
-  });
-
-  const sortedApplicants = [...filteredApplicants].sort((a, b) => {
+  const sortedApplicants = [...applicants].sort((a, b) => {
     if (sortBy === "gpa") {
       return sortOrder === "desc" ? b.gpa - a.gpa : a.gpa - b.gpa;
+    } else if (sortBy === "semesters") {
+      return sortOrder === "desc" ? b.semestersAsTA - a.semestersAsTA : a.semestersAsTA - b.semestersAsTA;
     } else {
       return sortOrder === "desc"
         ? b.name.localeCompare(a.name)
@@ -47,7 +38,7 @@ const ApplicantsList = () => {
     }
   });
 
-  const toggleSort = (field: "gpa" | "name") => {
+  const toggleSort = (field: "gpa" | "name" | "semesters") => {
     if (sortBy === field) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
@@ -74,7 +65,7 @@ const ApplicantsList = () => {
           </p>
         </div>
 
-        {/* Sort and Filter Controls */}
+        {/* Sort Controls */}
         <div className="mb-6 flex gap-3 flex-wrap items-center">
           <Button
             variant="outline"
@@ -89,6 +80,17 @@ const ApplicantsList = () => {
           </Button>
           <Button
             variant="outline"
+            onClick={() => toggleSort("semesters")}
+            className="gap-2"
+          >
+            <ArrowUpDown className="w-4 h-4" />
+            Ordenar por Experiencia
+            {sortBy === "semesters" && (
+              <span className="text-xs">({sortOrder === "desc" ? "↓" : "↑"})</span>
+            )}
+          </Button>
+          <Button
+            variant="outline"
             onClick={() => toggleSort("name")}
             className="gap-2"
           >
@@ -98,22 +100,6 @@ const ApplicantsList = () => {
               <span className="text-xs">({sortOrder === "desc" ? "↓" : "↑"})</span>
             )}
           </Button>
-          
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-muted-foreground" />
-            <Select value={filterBySemesters} onValueChange={setFilterBySemesters}>
-              <SelectTrigger className="w-[220px]">
-                <SelectValue placeholder="Filtrar por semestres" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos los postulantes</SelectItem>
-                <SelectItem value="0">Sin experiencia (0)</SelectItem>
-                <SelectItem value="1">1 semestre</SelectItem>
-                <SelectItem value="2">2 semestres</SelectItem>
-                <SelectItem value="3+">3+ semestres</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
         </div>
 
         {/* Applicants List */}
